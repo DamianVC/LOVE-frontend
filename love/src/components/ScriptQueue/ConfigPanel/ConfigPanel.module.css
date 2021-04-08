@@ -198,3 +198,23 @@ a.documentationLink {
   font-weight: 600;
   margin-left: -0.3em;
 }
+
+.changeConfigButton:after {
+  content: 'Change config. file ⌄';
+}
+
+.controlClassName:hover .changeConfigButton {
+  background: var(--second-quinary-background-color);
+}
+
+.controlClassName {
+  cursor: pointer;
+}
+
+.selectorWrapper {
+  padding-bottom: 1em;
+}
+
+.container {
+  width: 490px;
+}

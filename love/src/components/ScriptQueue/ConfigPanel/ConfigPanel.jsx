@@ -387,7 +387,34 @@ export default class ConfigPanel extends Component {
                   )}
                 </Hoverable>
               </div>
-              <AceEditor
+              {/* ConfigScript */}
+              <div className={styles.container}>
+                {/* <div className={styles.title}>LOVE Configuration File</div> */}
+                <div className={styles.subTitle}>Current configuration file</div>
+                <div className={styles.selectorWrapper}>
+                  <Select
+                    className={styles.logLevelSelect}
+                    arrowClassName={styles.changeConfigButton}
+                    controlClassName={styles.controlClassName}
+                    options={[0, 1, 2]}
+                    value={1}
+                    onChange={(selection) => onConfigSelection(selection)}
+                  />
+                </div>
+                <AceEditor
+                  mode="json"
+                  className={styles.rndEditor}
+                  theme="solarized_dark"
+                  name="UNIQUE_ID_OF_DIV"
+                  width={'100%'}
+                  value={this.state.value}
+                  readOnly
+                  editorProps={{ $blockScrolling: true }}
+                  fontSize={14}
+                />
+              </div>
+              {/* End ConfigScript */}
+              {/* <AceEditor
                 mode="yaml"
                 theme="solarized_dark"
                 name="UNIQUE_ID_OF_DIV"
@@ -399,7 +426,7 @@ export default class ConfigPanel extends Component {
                 fontSize={18}
                 tabSize={2}
                 showPrintMargin={false}
-              />
+              /> */}
             </div>
           </div>
           <div className={[styles.bottomBar, styles.bar].join(' ')}>
