@@ -209,6 +209,7 @@ a.documentationLink {
 
 .controlClassName {
   cursor: pointer;
+  height: 50px;
 }
 
 .selectorWrapper {
@@ -217,4 +218,21 @@ a.documentationLink {
 
 .container {
   width: 490px;
+}
+
+.changeConfigButton {
+  width: max-content;
+  padding: 0 1em;
+  height: 100%;
+  background: var(--second-quaternary-background-color);
+  border: none;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.changeConfigButton:after {
+  content: 'Change config. file ⌄';
 }

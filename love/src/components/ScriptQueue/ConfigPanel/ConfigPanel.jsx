@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect, } from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import { Rnd } from 'react-rnd';
@@ -39,8 +39,13 @@ export default class ConfigPanel extends Component {
     launchScript: PropTypes.func,
     closeConfigPanel: PropTypes.func,
     configPanel: PropTypes.object,
+    /** Current LOVE configuration */
+    config: PropTypes.object,
+    /** Set Current LOVE configuration */
+    setConfig: PropTypes.func,
   };
 
+  
   static defaultProps = {
     closeConfigPanel: () => 0,
     launchScript: () => 0,
@@ -286,6 +291,28 @@ export default class ConfigPanel extends Component {
       stacked: styles.horizontalDivider,
       beside: styles.verticalDivider,
     };
+
+    const getConfigSelectOption = (conf, index) => {
+      return {
+        value: conf,
+        label: (
+          <div key={index} className={styles.dropdownOption}>
+            <div className={styles.dropdownOptionLeftSection}>
+              <div className={styles.iconWrapper}>
+                <ScriptIcon title="Config. file" className={styles.paddedIcon} ></ScriptIcon>
+              </div>
+            </div>
+            <div className={styles.dropdownOptionRightSection}>
+              <div className={styles.dropdownOptionLabel}>{conf.filename}</div>
+              <div className={styles.dropdownOptionDate}>{formatTimestamp(conf.update_timestamp)}</div>
+            </div>
+          </div>
+        ),
+      };
+    };
+    const configStr = JSON.stringify(this.props.config ? this.props.config.content : [], null, 2);
+    const options = configList ? configList.map((conf, index) => getConfigSelectOption(conf, index)) : [];
+    const defaultOption = getConfigSelectOption(config, 0);
 
     return this.props.configPanel.show ? (
       <Rnd
