@@ -26,16 +26,48 @@ timeData: {
 The `Clock` and `TimeDisplay` components obtain the server time data from Redux update the clock every second. The calculation is as follows.
 
 First the definitions:
-| Time | Name |
-|-------------------|-----------------------------------------|
-| `t_server` | current UTC server time in seconds |
-| `t_local` | current UTC local time in seconds |
-| `t_server_0` | last UTC server time saved in seconds |
-| `t_local_0` | last UTC local time saved in seconds |
-| `t_mjd` | current Modified Julian Date in days |
-| `t_mjd_0` | last Modified Julian Date saved in days |
-| `t_sidereal` | current Sidereal Time in hourangles |
-| `t_sidereal_0` | last Sidereal Time saved in hourangles |
+```jsx noeditor
+const tableStyle = {color: 'black', width: '100%', textAlign: 'left', border: '1px solid black', borderCollapse: 'collapse'};
+const cellStyle = {border: '1px solid black', padding: '0.5em'};
+<table style={tableStyle}>
+  <tr>
+    <th style={cellStyle}>Time</th>
+    <th style={cellStyle}>Name</th>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_server</td>
+    <td style={cellStyle}>current UTC server time in seconds</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_local</td>
+    <td style={cellStyle}>current UTC local time in seconds</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_server_0</td>
+    <td style={cellStyle}>last UTC server time saved in seconds</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_local_0</td>
+    <td style={cellStyle}>last UTC local time saved in seconds</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_mjd</td>
+    <td style={cellStyle}>current Modified Julian Date in days</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_mjd_0</td>
+    <td style={cellStyle}>last Modified Julian Date saved in days</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_sidereal</td>
+    <td style={cellStyle}>current Sidereal Time in hourangles</td>
+  </tr>
+  <tr>
+    <td style={cellStyle}>t_sidereal_0</td>
+    <td style={cellStyle}>last Sidereal Time saved in hourangles</td>
+  </tr>
+</table>
+```
 
 ```py
 # Server values
