@@ -168,6 +168,16 @@ export const observatoryIndex = {
     component: require('../Time/TimeDisplay.container').default,
     schema: require('../Time/TimeDisplay.container').schema,
   },
+  OLE: {
+    component: require('../OLE/OLE.container').default,
+    schema: {
+      ...require('../OLE/OLE.container').schema,
+      props: {
+        ...defaultSchemaProps,
+        ...require('../OLE/OLE.container').schema.props,
+      },
+    },
+  },
 };
 
 export const auxtelIndex = {
