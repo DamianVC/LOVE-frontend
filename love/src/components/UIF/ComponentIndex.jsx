@@ -169,12 +169,22 @@ export const observatoryIndex = {
     schema: require('../Time/TimeDisplay.container').schema,
   },
   OLE: {
-    component: require('../OLE/OLE.container').default,
+    component: require('../OLE/OLEObservations/OLE.container').default,
     schema: {
-      ...require('../OLE/OLE.container').schema,
+      ...require('../OLE/OLEObservations/OLE.container').schema,
       props: {
         ...defaultSchemaProps,
-        ...require('../OLE/OLE.container').schema.props,
+        ...require('../OLE/OLEObservations/OLE.container').schema.props,
+      },
+    },
+  },
+  OLEObsDetail: {
+    component: require('../OLE/OLEObsDetail/OLEObsDetail.container').default,
+    schema: {
+      ...require('../OLE/OLEObsDetail/OLEObsDetail.container').schema,
+      props: {
+        ...defaultSchemaProps,
+        ...require('../OLE/OLEObsDetail/OLEObsDetail.container').schema.props,
       },
     },
   },
