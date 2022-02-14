@@ -33,6 +33,13 @@ beforeEach(async () => {
   // ARRANGE
   store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
   await store.dispatch(emptyToken);
+  jest.useFakeTimers();
+  jest.spyOn(global, 'clearInterval');
+  jest.spyOn(global, 'setInterval');
+});
+
+afterEach(() => {
+  jest.useRealTimers();
 });
 
 // TEST TIME INDEPENDENTLY
@@ -47,7 +54,6 @@ describe('Given the inital state', () => {
   };
 
   it('When the clock starts then its status is STARTED, and when it stops then the status is STOPPED', async () => {
-    jest.useFakeTimers();
     // BEFORE
     expect(getAllTime(store.getState()).clock_status).toEqual(clockStatuses.STOPPED);
     // START
@@ -145,16 +151,16 @@ describe('Given the inital state', () => {
     // Arrange
     const request_time = server_time.utc - 1;
     const receive_time = server_time.utc + 1;
-    jest.useFakeTimers();
     let time = getAllTime(store.getState());
     expect(time.clock_status).toEqual(clockStatuses.STOPPED);
     expect(time.clock).toEqual(initialState.clock);
 
-    // Login should start time
+    // Login should start timer
     let tick_time = (receive_time + request_time) / 2 + 1;
     Settings.now = () => new Date(receive_time * 1000).valueOf();
     await store.dispatch(doReceiveToken('username', 'love-token', {}, server_time, request_time));
     time = getAllTime(store.getState());
+
     expect(time.clock_status).toEqual(clockStatuses.STARTED);
 
     // It should have ticked once
@@ -166,11 +172,13 @@ describe('Given the inital state', () => {
     );
     expect(time.clock.sidereal_summit.toSeconds()).toEqual(server_time.sidereal_summit * 3600 + 1 * siderealSecond);
 
-    // Next 10 ticks
+    // Next 8 ticks
+    let c = 0;
     for (let diff = 2; diff < 10; diff++) {
-      tick_time += 1;
+      tick_time += 1; // tick_time == server_time.utc + 1
       Settings.now = () => new Date(tick_time * 1000).valueOf();
       jest.advanceTimersByTime(1000);
+      await Promise.resolve();
       time = getAllTime(store.getState());
       expect(time.clock).not.toEqual(initialState.clock);
       expect(time.clock.utc.toSeconds()).toEqual(server_time.utc + diff);
@@ -262,7 +270,6 @@ describe('Given the inital state', () => {
     expect(time.clock).toEqual(initialState.clock);
 
     // Login should start time
-    jest.useFakeTimers();
     await store.dispatch(
       doReceiveToken('username', 'love-token', {}, server_time[serverIndex], DateTime.utc().toSeconds()),
     );
