@@ -366,6 +366,7 @@ export default class ManagerInterface {
         });
       }
       return response.json().then((resp) => {
+        toast.success('Logs retrieved.');
         return resp;
       });
     });
