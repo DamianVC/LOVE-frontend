@@ -31,7 +31,7 @@ export class AdvancedLinkFactory extends DefaultLinkFactory {
     return <AdvancedLinkWidget link={event.model} diagramEngine={this.engine} />;
   }
 
-  generateModel(/* event */) {
+  generateModel = (/* event */) => {
     return new AdvancedLinkModel();
   }
 }

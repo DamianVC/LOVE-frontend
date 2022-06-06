@@ -1,0 +1,49 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb-base", "plugin:react/recommended"],
+  "rules": {
+    "max-len": [1, 120, 2, { "ignoreComments": true, "ignoreStrings": true, "ignoreTemplateLiterals": true}],
+    "arrow-parens": [1, "always"],
+    "arrow-body-style": "off",
+    "operator-linebreak": [1, "after", { "overrides": { "?": "before", ":": "before" } }],
+    "array-callback-return": "off",
+    "object-curly-newline": "off",
+    "camelcase": "off",
+    "consistent-return": "off",
+    "max-classes-per-file": ["error", 2],
+    "no-shadow": "off",
+    "no-unused-vars": "off",
+    "no-useless-concat": "off",
+    "no-console": "off",
+    "no-bitwise": "off",
+    "no-eval": "off",
+    "no-underscore-dangle": "off",
+    "no-plusplus": [0, { "allowForLoopAfterthoughts": true }],
+    "import/no-unresolved": "off",
+    "func-names": "off"
+  },
+  "plugins": ["only-warn"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.js",
+        "**/*.test.jsx"
+      ],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}

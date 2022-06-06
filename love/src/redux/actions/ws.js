@@ -120,6 +120,35 @@ const _receiveGroupSubscriptionData = ({ category, csc, salindex, data }) => {
 let resetSubsTimer = null;
 
 /**
+ * Request subscription for all PENDING subscriptions
+ */
+const _requestSubscriptions = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const connectionStatus = getConnectionStatus(state);
+    if (connectionStatus !== connectionStates.OPEN) {
+      return;
+    }
+    const subscriptions = getSubscriptions(state);
+    subscriptions.forEach((subscription) => {
+      if (subscription.status !== groupStates.PENDING && subscription.status !== groupStates.UNSUBSCRIBING) return;
+      const [category, csc, salindex, stream] = subscription.groupName.split('-');
+      socket.json({
+        option: 'subscribe',
+        category,
+        csc,
+        salindex,
+        stream,
+      });
+    });
+    dispatch({
+      type: REQUEST_SUBSCRIPTIONS,
+      subscriptions,
+    });
+  };
+};
+
+/**
  * Reset all the given subscriptions (status PENDING and no confirmationMessage)
  * If the "subscriptions" argument is absent or null, then all the subscriptions are reset
  * It also sets a timer to reset the subscriptions again (calling itself) after the priod defined by RESET_SUBS_PERIOD
@@ -307,52 +336,6 @@ export const addGroup = (groupName) => {
 };
 
 /**
- * Request subscription for all PENDING subscriptions
- */
-const _requestSubscriptions = () => {
-  return (dispatch, getState) => {
-    const state = getState();
-    const connectionStatus = getConnectionStatus(state);
-    if (connectionStatus !== connectionStates.OPEN) {
-      return;
-    }
-    const subscriptions = getSubscriptions(state);
-    subscriptions.forEach((subscription) => {
-      if (subscription.status !== groupStates.PENDING && subscription.status !== groupStates.UNSUBSCRIBING) return;
-      const [category, csc, salindex, stream] = subscription.groupName.split('-');
-      socket.json({
-        option: 'subscribe',
-        category,
-        csc,
-        salindex,
-        stream,
-      });
-    });
-    dispatch({
-      type: REQUEST_SUBSCRIPTIONS,
-      subscriptions,
-    });
-  };
-};
-
-/**
- * Reduce the counter of subscriptions for a given group. If the counter reaches 0 then an unsubscription is requested
- */
-export const removeGroup = (groupName) => {
-  return (dispatch, getState) => {
-    const state = getState();
-    const subscription = getSubscription(state, groupName);
-    if (!subscription) return;
-    dispatch({
-      type: REMOVE_GROUP,
-      groupName,
-    });
-    if (subscription.counter === 1) {
-      dispatch(requestGroupRemoval(groupName));
-    }
-  };
-};
-/**
  * Request the unsubscription of a given group
  */
 export const requestGroupRemoval = (groupName) => {
@@ -375,6 +358,24 @@ export const requestGroupRemoval = (groupName) => {
       type: REQUEST_GROUP_UNSUBSCRIPTION,
       groupName,
     });
+  };
+};
+
+/**
+ * Reduce the counter of subscriptions for a given group. If the counter reaches 0 then an unsubscription is requested
+ */
+export const removeGroup = (groupName) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const subscription = getSubscription(state, groupName);
+    if (!subscription) return;
+    dispatch({
+      type: REMOVE_GROUP,
+      groupName,
+    });
+    if (subscription.counter === 1) {
+      dispatch(requestGroupRemoval(groupName));
+    }
   };
 };
 

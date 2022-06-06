@@ -51,7 +51,7 @@ export default class AvailableScript extends PureComponent {
       <div className={scriptStyles.scriptContainer}>
         <div className={styles.availableScriptContainer}>
           <div className={scriptStyles.pathTextContainer} title={path}>
-            {(() => {
+            {/* {(() => {
               if (!this.props.isCompact) {
                 return <span className={scriptStyles.pathText}>{fileFolder}</span>;
               }
@@ -59,7 +59,7 @@ export default class AvailableScript extends PureComponent {
                 return <span className={scriptStyles.pathText}>.../</span>;
               }
               return null;
-            })()}
+            })()} */}
             <span className={[scriptStyles.pathText, scriptStyles.highlighted].join(' ')}>{fileName}</span>
             <span className={scriptStyles.pathText}>{fileExtension}</span>
           </div>

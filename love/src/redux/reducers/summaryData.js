@@ -1,10 +1,10 @@
+import { LOG_LEVELS } from 'Constants';
 import {
   UPDATE_LOG_MESSAGE_DATA,
   REMOVE_CSC_LOG_MESSAGES,
   UPDATE_ERROR_CODE_DATA,
   REMOVE_CSC_ERROR_CODE_DATA,
 } from '../actions/actionTypes';
-import { LOG_LEVELS } from 'Constants';
 
 const initialState = {
   logMessageData: [],

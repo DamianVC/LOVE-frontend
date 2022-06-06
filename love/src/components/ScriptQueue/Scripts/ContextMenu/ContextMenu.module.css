@@ -48,6 +48,6 @@ div.buttonText {
   cursor: pointer;
 }
 
-.row:not(.enabled) .iconWrapper path{
+.row:not(.enabled) .iconWrapper path {
   fill: initial;
 }
