@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useRef, useState } from 'react';
 import debounce from 'lodash.debounce';
+import yaml from 'js-yaml';
+// import Form from '@rjsf/core';
 import CSCExpandedContainer from 'components/CSCSummary/CSCExpanded/CSCExpanded.container';
 import { checkAuthlist } from 'Utils';
 import WaitingScript from './Scripts/WaitingScript/WaitingScript';
@@ -21,6 +23,7 @@ import { SALCommandStatus } from '../../redux/actions/ws';
 import Input from '../GeneralPurpose/Input/Input';
 import GlobalState from './GlobalState/GlobalState';
 import ScriptDetails from './Scripts/ScriptDetails';
+import { style } from 'd3';
 
 /**
  * Display lists of scripts from the ScriptQueue SAL object. It includes: Available scripts list, Waiting scripts list and Finished scripts list.
@@ -55,6 +58,8 @@ export default class ScriptQueue extends Component {
       },
       resetButton: <span>Hide details &#9650;</span>,
       blockedByAuthlist: false,
+      scriptsTree: {},
+      collapseTree: {},
     };
 
     this.observer = null;
@@ -115,10 +120,27 @@ export default class ScriptQueue extends Component {
       }
     }
 
-    if (this.props.availableScriptList && this.props.availableScriptList !== prevProps.availableScriptList) {
+    if (
+      this.props.availableScriptList !== prevProps.availableScriptList ||
+      this.state.availableScriptsFilter !== _prevState.availableScriptsFilter
+    ) {
       this.props.availableScriptList.sort((a, b) => {
         return a.path.localeCompare(b.path, 'en', { sensitivity: 'base' });
       });
+
+      const filteredScripts = this.props.availableScriptList.filter((script) => {
+        if (script.path.toLowerCase().includes(this.state.availableScriptsFilter.toLowerCase())) {
+          return true;
+        }
+        return false;
+        // return script.path.toLowerCase().includes(this.state.availableScriptsFilter.toLowerCase());
+      });
+      const standard = filteredScripts.filter((script) => script.type === 'standard');
+      const external = filteredScripts.filter((script) => script.type === 'external');
+      const externalTree = this.getScriptHierarchy(external);
+      const standardTree = this.getScriptHierarchy(standard);
+      const scriptsTree = { standard: standardTree, external: externalTree };
+      this.setState({ scriptsTree });
     }
     if (this.props.heartbeats !== prevProps.heartbeats) {
       this.setState({
@@ -239,7 +261,8 @@ export default class ScriptQueue extends Component {
   };
 
   hideAvailableScripts = () => {
-    this.setState({
+    //prod.liveshare.vsengsaas.visualstudio.com/join?5C9BD9B9D6235FC4FBA4281EA175F887F746
+    https: this.setState({
       isAvailableScriptListVisible: false,
     });
   };
@@ -346,8 +369,91 @@ export default class ScriptQueue extends Component {
     });
   };
 
+  getScriptHierarchy = (scripts) => {
+    const mDict = {};
+    for (let i = 0; i < scripts.length; i++) {
+      // Quita los / del path
+      const tokens = scripts[i].path.split('/');
+      let ref = mDict;
+      for (let j = 0; j < tokens.length; j++) {
+        // Último elemento -> script.py
+        if (j === tokens.length - 1) {
+          ref['root'] = ref['root'] ?? [];
+          ref['root'].push(tokens[j]);
+        }
+        // Todos los elementos que no sean el script
+        else {
+          ref[tokens[j]] = ref[tokens[j]] ?? {};
+          ref = ref[tokens[j]];
+        }
+      }
+    }
+    return mDict;
+  };
+
+  setCollapseTree = (key) => {
+    this.setState((state) => ({
+      collapseTree: { ...state.collapseTree, [key]: !state.collapseTree[key] },
+    }));
+  };
+
+  printScripts = (obj, prevKey = '') => {
+    const html = [];
+    let mPrevKey;
+    for (let key in obj) {
+      let propHtml;
+      // Si propiedad es root
+      if (key === 'root') {
+        const tokens = prevKey.split('-');
+        const mainPath = tokens[0];
+        const pathTokens = tokens.slice(1, tokens.length - 1);
+        const scriptsHtml = obj[key].map((scriptName) => {
+          const scriptObject = this.props.availableScriptList.find((script) => {
+            if (script.type !== mainPath) return false;
+            return script.path.includes([...pathTokens, scriptName].join('/'));
+          });
+          return React.createElement('div', {}, this.renderAvailableScript({ ...scriptObject }));
+        });
+        propHtml = React.createElement('div', {}, scriptsHtml);
+      } else {
+        mPrevKey = prevKey.concat(key, '-');
+        const collapseKey = mPrevKey.substring(0, mPrevKey.length - 1);
+        propHtml = React.createElement('div', {
+          className: styles.availableScriptTypeSeparator
+        }, [
+          React.createElement('div', { className: styles.path }, [
+            React.createElement(
+              'div',
+              {
+                onClick: () => this.setCollapseTree(collapseKey),
+              },
+              <RowExpansionIcon style={styles.leftIcon} expanded={!this.state.collapseTree[collapseKey]} />,
+              key
+            ),
+          ]),
+          React.createElement(
+            'div',
+            {
+              className: [styles.leftMargin, styles.scriptsTransition].join(' '),
+              style: { maxHeight: !this.state.collapseTree[collapseKey] ? '100000px' : '0px' },
+            },
+            this.printScripts(obj[key], mPrevKey),
+          ),
+        ]);
+      }
+      html.push(propHtml);
+    }
+    return React.createElement('div', {className: styles.test}, html);
+  };
+
   launchScriptConfig = (e, script) => {
     const { x } = e.target.getBoundingClientRect();
+    let doc = null;
+    try {
+      doc = yaml.load(script.configSchema);
+    } catch (e) {
+      console.log(e);
+    }
     this.setState({
       configPanel: {
         script,
@@ -356,6 +462,7 @@ export default class ScriptQueue extends Component {
         x,
         y: 100,
         configSchema: script.configSchema,
+        newSchema: doc,
       },
     });
   };
@@ -475,6 +582,7 @@ export default class ScriptQueue extends Component {
       params: {},
     });
   };
+
   onClickContextMenu = (event, index, currentMenuSelected = false) => {
     console.log('Click context menu');
     event.stopPropagation();
@@ -598,6 +706,7 @@ export default class ScriptQueue extends Component {
     ];
 
     const contextMenuOption = this.state.currentMenuSelected ? currentContextMenu : waitingContextMenu;
+
     return (
       <div
         id="container"
@@ -623,6 +732,7 @@ export default class ScriptQueue extends Component {
           closeConfigPanel={this.closeConfigPanel}
           configPanel={this.state.configPanel}
         />
+
         <ContextMenu
           isOpen={this.state.isContextMenuOpen}
           contextMenuData={this.state.contextMenuData}
@@ -677,9 +787,7 @@ export default class ScriptQueue extends Component {
             className={styles.currentScriptDetails}
             ref={this.currentScriptDetailsContainer}
           >
-            <div className={styles.currentScriptDescription}>
-              <ScriptDetails {...current} />
-            </div>
+            <div className={styles.currentScriptDescription}>{/* <ScriptDetails {...current} /> */}</div>
             <div className={styles.currentScriptLogs}>
               <CSCExpandedContainer
                 group={''}
@@ -723,8 +831,8 @@ export default class ScriptQueue extends Component {
                     <span style={{ width: '100%' }}>&#8854;</span>
                   </div>
                 </div>
-                <ScriptList noOverflow={true}>
-                  <div className={styles.standardExternalContainer}>
+                {/*<ScriptList noOverflow={true}>
+                   <div className={styles.standardExternalContainer}>
                     <div
                       className={styles.availableScriptTypeTitle}
                       onClick={() => this.toggleAvailableScriptsExpanded('standard')}
@@ -770,9 +878,11 @@ export default class ScriptQueue extends Component {
                         }
                         return this.renderAvailableScript(script);
                       })}
-                    </div>
-                  </div>
-                </ScriptList>
+                    </div>  
+                  </div> 
+                  {this.printScripts(this.state.scriptsTree)}
+                </ScriptList>*/}
+                <div className = {styles.collapsableTreeDiv}>{this.printScripts(this.state.scriptsTree)}</div>
               </div>
             </div>
           </div>

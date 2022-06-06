@@ -68,7 +68,7 @@
 
 .sideBySide {
   flex-direction: row;
-  justify-content: space-around;
+  /* justify-content: space-around; */
 }
 
 .checkpointsRegexpContainer {
@@ -86,7 +86,7 @@
 }
 
 .logLevelLabel {
-  grid-column-start: span 2;
+  grid-column-start: 2;
 }
 
 .logLevelSelect {
@@ -118,9 +118,20 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 }
 
-.sidePanel > h3,
+.body > h3 {
+  width: 100%;
+  text-align: left;
+}
+
+.body > .rotated {
+  transform: rotate(180deg);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
 .sidePanelHeaderContainer {
   margin-left: 1rem;
   margin-bottom: 0.25rem;
@@ -197,4 +208,215 @@ a.documentationLink {
 .errorName {
   font-weight: 600;
   margin-left: -0.3em;
+}
+
+.middleBar {
+  display: flex;
+  height: 40px;
+  width: 100%;
+}
+
+.collapsableSchema {
+  height: 20px;
+  float: right;
+  cursor: pointer;
+  margin-right: auto;
+}
+
+.manualConfig {
+  flex-grow: 2;
+  background-color: var(--second-primary-background-color);
+  margin: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.manualConfig:hover {
+  background-color: var(--tertiary-background-color);
+}
+
+.automaticConfig {
+  flex-grow: 2;
+  background-color: var(--second-primary-background-color);
+  margin: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.automaticConfig:hover {
+  background-color: var(--tertiary-background-color);
+}
+
+.selectedConfig {
+  background-color: var(--tertiary-background-color);
+}
+
+.scriptOptions {
+  display: flex;
+  align-items: center;
+  padding: var(--content-padding);
+  margin-left: auto;
+}
+
+.availableScriptTypeSeparator {
+  border-bottom: 1px solid var(--second-quaternary-background-color);
+  margin: 1em 0;
+}
+
+.scriptForm {
+  height: 300px;
+  width: 100%;
+  text-align: left;
+  overflow-y: scroll;
+  background-color: var(--second-quaternary-background-dimmed-color);
+}
+
+.customSelect {
+  margin-bottom: 7px;
+}
+
+.customButton {
+  font-weight: bold;
+  background-color: var(--tertiary-background-color);
+
+}
+
+.customButton:hover{
+  background-color: var(--quinary-background-color);
+}
+
+.arrayContainer input {
+  margin: 7px;
+}
+
+.addNewArray button {
+  width: 100%;
+}
+
+.deleteItemButtonContainer {
+  display: flex;
+}
+
+.deleteItemButton {
+  flex-grow: 1;
+  border-radius: 100%;
+  border: 0;
+  width: 2em;
+  height: 2em;
+  background-color: var(--second-quaternary-background-color);
+  margin: 0.5em 0.6em;
+  cursor: pointer;
+}
+
+.deleteItemButton svg {
+  width: 90%;
+  height: 90%;
+}
+
+.deleteItemButton:hover {
+  background-color: var(--second-quinary-background-color);
+}
+
+.checkboxDescription {
+  margin: 1em 0;
+}
+
+.arrayElement {
+  flex-grow: 8;
+  display: flex;
+  align-items: center;
+}
+
+.deleteItem {
+  flex-grow: 1;
+}
+
+.arrayElement > div {
+  flex-grow: 2;
+  margin: 0 5px;
+}
+
+.upIcon {
+  transform: rotate(-90deg);
+  height: 1em;
+  margin-right: 5px;
+}
+
+.downIcon {
+  height: 1em;
+  margin-right: 5px;
+}
+
+.leftIcon {
+  height: 1em;
+}
+
+.rightIcon {
+  height: 1em;
+  transform: rotate(180deg);
+}
+
+.configSelector {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 5px;
+  padding: var(--content-padding);
+}
+
+.saveDivs {
+  height: 2em;
+  width: 2em;
+  border: none;
+  border-radius: 100%;
+  margin: 7px;
+  padding: 4px;
+}
+
+.saveDivs svg {
+  height: 90%;
+  width: 90%;
+}
+
+.saveDivs:hover {
+  background-color: var(--second-quaternary-background-color);
+}
+
+.formTitleModifier {
+  display: none;
+}
+
+.formSchemaTitleModifier {
+  font-weight: bold;
+  font-size: var(--font-size-medium);
+  color: var(--base-font-color);
+  text-align: justify;
+}
+
+.formSchemaDescriptionModifier {
+  font-size: var(--font-size-medium);
+  text-align: left;
+}
+
+.test{
+  background-color: var(--second-quaternary-background-dimmed-color);
+  padding: 0 1em;
+  margin: 7px 0;
+  text-align: justify;
+}
+
+fieldset {
+  border: 0;
+}
+
+fieldset p {
+  text-align: left;
+  font-weight: bold;
+  font-size: var(--font-size-medium);
+  color: var(--base-font-color);
+}
+
+fieldset label{
+  margin: 7px 0;
+  font-weight: bold;
 }

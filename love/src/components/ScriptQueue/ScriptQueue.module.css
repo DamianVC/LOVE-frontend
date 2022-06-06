@@ -101,6 +101,7 @@
 .currentScriptDescription {
   background: var(--second-secondary-background-color);
   border-right: 1px solid var(--second-tertiary-background-color);
+  overflow-y: scroll;
 }
 
 .currentScriptLogs {
@@ -251,4 +252,43 @@
 .availableScriptsInput {
   line-height: 1em;
   height: 2em;
+}
+
+.path {
+  background: var(--second-primary-background-color);
+  margin-left: 1em;
+  margin: 0.5em 0;
+  display: grid;
+  /* border-bottom: 1px solid #fff; */
+  grid-template-columns: 1fr 1.3em;
+  padding: 1em 1em;
+}
+
+.leftIcon {
+  max-height: 16px;
+  margin-right: 1em;
+}
+
+.leftMargin {
+  margin-left: 1em;
+}
+
+.scriptsTransition {
+  transition: all 500ms cubic-bezier(0, 1, 0, 1);
+  overflow: hidden;
+}
+
+.availableScriptTypeSeparator {
+  border-bottom: 1px solid var(--second-quaternary-background-color);
+  margin: 1em 0;
+}
+
+.collapsableTreeDiv{
+ overflow-y: scroll;
+ height: 100%;
+ padding-right: 2em;
+}
+
+.test{
+  padding: 0;
 }

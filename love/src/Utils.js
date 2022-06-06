@@ -5,7 +5,7 @@ import html2canvas from 'html2canvas';
 import { DateTime } from 'luxon';
 import { toast } from 'react-toastify';
 import Moment from 'moment';
-import { WEBSOCKET_SIMULATION } from 'Config.js';
+import { WEBSOCKET_SIMULATION } from 'Config';
 import { SALCommandStatus } from 'redux/actions/ws';
 
 /* Backwards compatibility of Array.flat */
@@ -289,6 +289,106 @@ export default class ManagerInterface {
         // console.log('Session expired. Logging out');
         ManagerInterface.removeToken();
         return false;
+      }
+      return response.json().then((resp) => {
+        return resp;
+      });
+    });
+  }
+
+  // Cambiar el nombre de la variable en backend -> script = script_path
+  static getScriptConfiguration(scriptPath, scriptType) {
+    const token = ManagerInterface.getToken();
+    if (token === null) {
+      // console.log('Token not found during validation');
+      return new Promise((resolve) => resolve(false));
+    }
+    const url = `${this.getApiBaseUrl()}script-configuration/?path=${scriptPath}&type=${scriptType}`;
+    return fetch(url, {
+      method: 'GET',
+      headers: this.getHeaders(),
+    }).then((response) => {
+      if (response.status >= 500) {
+        // console.error('Error communicating with the server.);
+        return false;
+      }
+      if (response.status === 401 || response.status === 403) {
+        // console.log('Session expired. Logging out');
+        ManagerInterface.removeToken();
+        return false;
+      }
+      return response.json().then((resp) => {
+        return resp;
+      });
+    });
+  }
+
+  static updateScriptName(id, config_schema) {
+    const token = ManagerInterface.getToken();
+    if (token === null) {
+      // console.log('Token not found during validation');
+      return new Promise((resolve) => resolve(false));
+    }
+    const url = `${this.getApiBaseUrl()}script-configuration/${id}/`;
+    return fetch(url, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        config_schema,
+      }),
+    }).then((response) => {
+      if (response.status >= 500) {
+        // console.error('Error communicating with the server.);
+        return false;
+      }
+      if (response.status === 401 || response.status === 403) {
+        // console.log('Session expired. Logging out');
+        ManagerInterface.removeToken();
+        return false;
+      }
+      if (response.status === 400) {
+        return response.json().then((resp) => {
+          toast.error(resp.ack);
+          return false;
+        });
+      }
+      return response.json().then((resp) => {
+        return resp;
+      });
+    });
+  }
+
+  static postScriptConfiguration(script_path, script_type, config_name, config_schema) {
+    const token = ManagerInterface.getToken();
+    if (token === null) {
+      // console.log('Token not found during validation');
+      return new Promise((resolve) => resolve(false));
+    }
+    const url = `${this.getApiBaseUrl()}script-configuration/`;
+    return fetch(url, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify({
+        script_path,
+        script_type,
+        config_name,
+        config_schema,
+      }),
+    }).then((response) => {
+      if (response.status >= 500) {
+        // console.error('Error communicating with the server.);
+        return false;
+      }
+      if (response.status === 401 || response.status === 403) {
+        // console.log('Session expired. Logging out');
+        ManagerInterface.removeToken();
+        return false;
+      }
+      if (response.status === 400) {
+        return response.json().then((resp) => {
+          toast.error(resp.ack);
+          return false;
+        });
       }
       return response.json().then((resp) => {
         return resp;
