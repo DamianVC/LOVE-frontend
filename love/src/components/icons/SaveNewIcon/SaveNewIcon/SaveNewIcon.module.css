@@ -1,0 +1,12 @@
+/* .path {
+  fill: var(--secondary-font-color);
+  stroke: var(--secondary-font-color);
+} */
+.svg {
+  vertical-align: top;
+  fill: var(--secondary-font-color);
+  /*stroke: var(--base-font-color);*/
+}
+.st0 {
+  fill:#788F9B;
+}
