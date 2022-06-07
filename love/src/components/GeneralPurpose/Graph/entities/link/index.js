@@ -1,3 +1,4 @@
+/* eslint class-methods-use-this: ["error", { "enforceForClassFields": false }] */
 import { DefaultLinkFactory, DefaultLinkModel } from '@projectstorm/react-diagrams';
 import * as React from 'react';
 import { AdvancedLinkWidget } from './AdvancedLinkWidget';
@@ -33,5 +34,5 @@ export class AdvancedLinkFactory extends DefaultLinkFactory {
 
   generateModel = (/* event */) => {
     return new AdvancedLinkModel();
-  }
+  };
 }

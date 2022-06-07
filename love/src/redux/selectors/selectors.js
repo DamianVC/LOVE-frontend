@@ -41,7 +41,8 @@ export const getWebSocket = (state) => state.ws.socket;
 
 export const getSubscriptionsStatus = (state) => state.ws.subscriptionsState;
 
-export const getSubscription = (state, groupName) => state.ws.subscriptions.find((subscription) => subscription.groupName === groupName);
+export const getSubscription =
+(state, groupName) => state.ws.subscriptions.find((subscription) => subscription.groupName === groupName);
 
 export const getSubscriptions = (state) => state.ws.subscriptions;
 

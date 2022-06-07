@@ -1,4 +1,4 @@
-/* eslint camelcase: 0 */
+/* eslint no-loop-func: 0 */
 /* eslint no-await-in-loop: 0 */
 /* eslint no-restricted-syntax: 0 */
 

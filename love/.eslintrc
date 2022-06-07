@@ -15,6 +15,7 @@
     "no-unused-vars": "off",
     "no-useless-concat": "off",
     "no-console": "off",
+    "no-nested-ternary": "off",
     "no-bitwise": "off",
     "no-eval": "off",
     "no-underscore-dangle": "off",
