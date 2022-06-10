@@ -1,7 +1,6 @@
 import React, { Component, useEffect, useRef, useState } from 'react';
 import debounce from 'lodash.debounce';
 import yaml from 'js-yaml';
-// import Form from '@rjsf/core';
 import CSCExpandedContainer from 'components/CSCSummary/CSCExpanded/CSCExpanded.container';
 import { checkAuthlist } from 'Utils';
 import WaitingScript from './Scripts/WaitingScript/WaitingScript';
@@ -22,9 +21,6 @@ import MoveToBottomIcon from '../icons/ScriptQueue/MoveToBottomIcon/MoveToBottom
 import { SALCommandStatus } from '../../redux/actions/ws';
 import Input from '../GeneralPurpose/Input/Input';
 import GlobalState from './GlobalState/GlobalState';
-import ScriptDetails from './Scripts/ScriptDetails';
-import { style } from 'd3';
-
 /**
  * Display lists of scripts from the ScriptQueue SAL object. It includes: Available scripts list, Waiting scripts list and Finished scripts list.
  *
@@ -133,7 +129,6 @@ export default class ScriptQueue extends Component {
           return true;
         }
         return false;
-        // return script.path.toLowerCase().includes(this.state.availableScriptsFilter.toLowerCase());
       });
       const standard = filteredScripts.filter((script) => script.type === 'standard');
       const external = filteredScripts.filter((script) => script.type === 'external');
@@ -372,16 +367,13 @@ export default class ScriptQueue extends Component {
   getScriptHierarchy = (scripts) => {
     const mDict = {};
     for (let i = 0; i < scripts.length; i++) {
-      // Quita los / del path
       const tokens = scripts[i].path.split('/');
       let ref = mDict;
       for (let j = 0; j < tokens.length; j++) {
-        // Último elemento -> script.py
         if (j === tokens.length - 1) {
           ref['root'] = ref['root'] ?? [];
           ref['root'].push(tokens[j]);
         }
-        // Todos los elementos que no sean el script
         else {
           ref[tokens[j]] = ref[tokens[j]] ?? {};
           ref = ref[tokens[j]];
@@ -402,7 +394,6 @@ export default class ScriptQueue extends Component {
     let mPrevKey;
     for (let key in obj) {
       let propHtml;
-      // Si propiedad es root
       if (key === 'root') {
         const tokens = prevKey.split('-');
         const mainPath = tokens[0];
@@ -676,12 +667,6 @@ export default class ScriptQueue extends Component {
     const finishedScriptListClass = this.state.isFinishedScriptListListVisible ? '' : styles.collapsedScriptList;
     const availableScriptListClass = this.state.isAvailableScriptListVisible ? '' : styles.collapsedScriptList;
     const current = this.props.current === 'None' ? {} : { ...this.props.current };
-    // const now = new Date();
-    // Fix time zones for next line
-    // const currentScriptElapsedTime =
-    //   this.props.current === 'None' || current.timestampRunStart === undefined
-    //     ? 0
-    //     : now.getTime() / 1000.0 - current.timestampRunStart;
     const waitingList = this.state.useLocalWaitingList ? this.state.waitingScriptList : this.props.waitingScriptList;
 
     const totalWaitingSeconds = waitingList.reduce((previousSum, currentElement) => {
@@ -787,7 +772,7 @@ export default class ScriptQueue extends Component {
             className={styles.currentScriptDetails}
             ref={this.currentScriptDetailsContainer}
           >
-            <div className={styles.currentScriptDescription}>{/* <ScriptDetails {...current} /> */}</div>
+            <div className={styles.currentScriptDescription}/>
             <div className={styles.currentScriptLogs}>
               <CSCExpandedContainer
                 group={''}
@@ -831,57 +816,6 @@ export default class ScriptQueue extends Component {
                     <span style={{ width: '100%' }}>&#8854;</span>
                   </div>
                 </div>
-                {/*<ScriptList noOverflow={true}>
-                   <div className={styles.standardExternalContainer}>
-                    <div
-                      className={styles.availableScriptTypeTitle}
-                      onClick={() => this.toggleAvailableScriptsExpanded('standard')}
-                    >
-                      <span>Standard scripts</span>
-                      <span>
-                        <RowExpansionIcon expanded={this.state.availableScriptsStandardExpanded} />
-                      </span>
-                    </div>
-                    <div
-                      className={[
-                        styles.standardScriptsContainer,
-                        this.state.availableScriptsStandardExpanded ? '' : styles.availableListCollapsed,
-                      ].join(' ')}
-                    >
-                      {this.props.availableScriptList.map((script) => {
-                        if (script.type && script.type.toLowerCase() !== 'standard') return null;
-                        if (!script.path.toLowerCase().includes(this.state.availableScriptsFilter.toLowerCase()))
-                          return null;
-                        return this.renderAvailableScript(script);
-                      })}
-                    </div>
-                    <div className={styles.availableScriptTypeSeparator}></div>
-                    <div
-                      className={styles.availableScriptTypeTitle}
-                      onClick={() => this.toggleAvailableScriptsExpanded('external')}
-                    >
-                      <span>External scripts</span>
-                      <span>
-                        <RowExpansionIcon expanded={this.state.availableScriptsExternalExpanded} />
-                      </span>
-                    </div>
-                    <div
-                      className={[
-                        styles.externalScriptsContainer,
-                        this.state.availableScriptsExternalExpanded ? '' : styles.availableListCollapsed,
-                      ].join(' ')}
-                    >
-                      {this.props.availableScriptList.map((script) => {
-                        if (script.type && script.type.toLowerCase() !== 'external') return null;
-                        if (!script.path.toLowerCase().includes(this.state.availableScriptsFilter.toLowerCase())) {
-                          return null;
-                        }
-                        return this.renderAvailableScript(script);
-                      })}
-                    </div>  
-                  </div> 
-                  {this.printScripts(this.state.scriptsTree)}
-                </ScriptList>*/}
                 <div className = {styles.collapsableTreeDiv}>{this.printScripts(this.state.scriptsTree)}</div>
               </div>
             </div>

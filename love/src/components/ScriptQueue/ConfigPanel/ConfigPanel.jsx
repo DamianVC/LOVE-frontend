@@ -14,7 +14,6 @@ import styles from './ConfigPanel.module.css';
 import Input from '../../GeneralPurpose/Input/Input';
 import Button from '../../GeneralPurpose/Button/Button';
 import DeleteIcon from '../../icons/DeleteIcon/DeleteIcon';
-import ErrorIcon from '../../icons/ErrorIcon/ErrorIcon';
 import RotateIcon from '../../icons/RotateIcon/RotateIcon';
 import CloseIcon from '../../icons/CloseIcon/CloseIcon';
 import RowExpansionIcon from '../../icons/RowExpansionIcon/RowExpansionIcon';
@@ -291,7 +290,6 @@ export default class ConfigPanel extends Component {
       ).then((data) => {
         const options = data.map((conf) => ({ label: conf.config_name, value: conf.id }));
         const configuration = data.find((conf) => conf.config_name === 'last_script');
-        console.log(configuration);
         this.setState((state) => ({
           configurationOptions: options,
           configurationList: data,
@@ -452,7 +450,6 @@ export default class ConfigPanel extends Component {
       TitleField: this.CustomTitleField,
     };
 
-    // hay cambio?
     let configurationChanged = false;
     const configuration = this.state.configurationList.find(
       (conf) => conf.id === this.state.selectedConfiguration?.value,
@@ -461,7 +458,6 @@ export default class ConfigPanel extends Component {
       configurationChanged = true;
     }
 
-    // hay cambio input?
     let configurationNameChanged = false;
     if (
       this.state.configurationList.findIndex((conf) => {
@@ -568,7 +564,7 @@ export default class ConfigPanel extends Component {
                       this.setState({ manualConfig: true });
                     }}
                   >
-                    MANUAL
+                    MANUAL CONFIG
                   </div>
                   <div
                     className={[styles.automaticConfig, !this.state.manualConfig ? styles.selectedConfig : ''].join(
@@ -578,7 +574,7 @@ export default class ConfigPanel extends Component {
                       this.setState({ manualConfig: false });
                     }}
                   >
-                    AUTOMATIC
+                    FORM CONFIG
                   </div>
                 </div>
                 <div className={styles.scriptOptions}>
@@ -663,7 +659,7 @@ export default class ConfigPanel extends Component {
               </div>
               <div className={styles.sidePanelHeaderContainer}>
                 {' '}
-                {/* title={this.state.configErrorTrace */}
+
                 <Hoverable>
                   <div/>
                   {this.state.configErrors.length > 0 && (
@@ -699,7 +695,6 @@ export default class ConfigPanel extends Component {
                   ArrayFieldTemplate={this.ArrayTemplate}
                   onChange={(e) => {
                     this.setState({ formData: e.formData });
-                    console.log(e.formData);
                   }}
                   onSubmit={(e) => {
                     this.setState({
