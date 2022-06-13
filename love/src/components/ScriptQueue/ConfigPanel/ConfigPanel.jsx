@@ -691,18 +691,22 @@ export default class ConfigPanel extends Component {
                   uiSchema={uiSchema}
                   widgets={widgets}
                   fields={fields}
+                  children={true}
                   className={styles.scriptForm}
                   formData={this.state.formData}
                   ArrayFieldTemplate={this.ArrayTemplate}
                   onChange={(e) => {
-                    this.setState({ formData: e.formData });
-                  }}
-                  onSubmit={(e) => {
-                    this.setState({
-                      value: yaml.dump(e.formData, { flowLevel: 2 }),
-                      manualConfig: true,
+                    this.setState({ 
+                      formData: e.formData,
+                      value: yaml.dump(e.formData, { flowLevel: 2 }) 
                     });
                   }}
+                  // onSubmit={(e) => {
+                  //   this.setState({
+                  //     value: yaml.dump(e.formData, { flowLevel: 2 }),
+                  //     manualConfig: true,
+                  //   });
+                  // }}
                 />
               )}
               {this.state.manualConfig && (
