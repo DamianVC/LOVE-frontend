@@ -594,9 +594,10 @@ export default class ConfigPanel extends Component {
                       onChange={(e) => {
                         const configuration = this.state.configurationList.find((conf) => conf.id === e.value);
                         this.setState({
+                          formData: yaml.load(configuration?.config_schema),
                           selectedConfiguration: e,
                           value: configuration?.config_schema ?? '',
-                          configurationName: configuration.config_name,
+                          configurationName: configuration.config_name
                         });
                       }}
                     />
